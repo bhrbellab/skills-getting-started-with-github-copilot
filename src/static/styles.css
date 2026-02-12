@@ -101,8 +101,8 @@ section h3 {
 }
 
 .participants ul {
-  list-style: disc;
-  margin-left: 20px;
+  list-style: none;
+  margin-left: 0;
   padding-left: 0;
 }
 
@@ -114,7 +114,41 @@ section h3 {
   border-radius: 6px;
   border: 1px solid #eef3fb;
   margin-bottom: 6px;
-  display: list-item;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.participant-email {
+  flex-grow: 1;
+}
+
+.delete-participant {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  margin-left: 8px;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+.delete-participant:hover {
+  color: #fff;
+  background-color: #d32f2f;
+  transform: scale(1.1);
+}
+
+.delete-participant:active {
+  transform: scale(0.95);
 }
 
 /* No participants text */

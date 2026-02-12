@@ -35,7 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="participants">
               <h5>Participants</h5>
               <ul>
-                ${participants.map(p => `<li class="participant-item">${escapeHtml(p)}</li>`).join("")}
+                ${participants.map(p => `
+                  <li class="participant-item" data-activity="${escapeHtml(name)}" data-email="${escapeHtml(p)}">
+                    <span class="participant-email">${escapeHtml(p)}</span>
+                    <button class="delete-participant" aria-label="Remove ${escapeHtml(p)}" title="Remove participant">×</button>
+                  </li>
+                `).join("")}
               </ul>
             </div>
           `;
@@ -52,6 +57,34 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         activitiesList.appendChild(activityCard);
+
+        // Add delete handlers
+        activityCard.querySelectorAll(".delete-participant").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const li = btn.closest(".participant-item");
+            const activity = li.dataset.activity;
+            const email = li.dataset.email;
+
+            try {
+              const response = await fetch(
+                `/activities/${encodeURIComponent(activity)}/participants/${encodeURIComponent(email)}`,
+                { method: "DELETE" }
+              );
+
+              if (response.ok) {
+                // Refresh activities to show updated participants
+                fetchActivities();
+              } else {
+                const error = await response.json();
+                alert(`Failed to remove participant: ${error.detail || "Unknown error"}`);
+              }
+            } catch (error) {
+              console.error("Error removing participant:", error);
+              alert("Failed to remove participant. Please try again.");
+            }
+          });
+        });
 
         // Add option to select dropdown
         const option = document.createElement("option");

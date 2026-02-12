@@ -56,5 +56,19 @@ def signup(activity):
     participants.append(email)
     return jsonify({"message": f"{email} signed up for {activity}"}), 200
 
+@app.route("/activities/<path:activity>/participants/<path:email>", methods=["DELETE"])
+def remove_participant(activity, email):
+    if activity not in ACTIVITIES:
+        return jsonify({"detail": "Activity not found"}), 404
+
+    act = ACTIVITIES[activity]
+    participants = act.get("participants", [])
+
+    if email not in participants:
+        return jsonify({"detail": "Participant not found"}), 404
+
+    participants.remove(email)
+    return jsonify({"message": f"Removed {email} from {activity}"}), 200
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
